@@ -1,0 +1,37 @@
+type User {
+  id: ID! @unique
+  username: String! @unique
+}
+
+type Answer {
+  id: ID! @unique
+  text: String!
+  question: Question!
+}
+
+type Question {
+  id: ID! @unique
+  text: String!
+  test: Test!
+  answers: [Answer!]! @relation(name: "Answers")
+  correctAnswers: [Answer!]! @relation(name: "CorrectAnswers")
+}
+
+type Test {
+  id: ID! @unique
+  name: String!
+  questions: [Question!]!
+}
+
+type CompletedTest {
+  id: ID! @unique
+  user: User!
+  test: Test!
+  score: Score! @relation(name: "TestScore", onDelete: CASCADE)
+}
+
+type Score {
+  id: ID! @unique
+  correctlyAnswered: [Question!]! @relation(name: "CorrectlyAnswered")
+  wronglyAnswered: [Question!]! @relation(name: "WronglyAnswered")
+}

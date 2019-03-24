@@ -377,18 +377,19 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface AnswerUpsertWithWhereUniqueNestedInput {
-  where: AnswerWhereUniqueInput;
-  update: AnswerUpdateDataInput;
-  create: AnswerCreateInput;
+export interface CompletedTestCreateInput {
+  user: UserCreateOneInput;
+  test: TestCreateOneInput;
+  score: ScoreCreateOneInput;
 }
 
 export type AnswerWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface AnswerUpdateManyMutationInput {
-  text?: String;
+export interface TestCreateInput {
+  name: String;
+  questions?: QuestionCreateManyWithoutTestInput;
 }
 
 export interface AnswerWhereInput {
@@ -426,19 +427,9 @@ export interface AnswerWhereInput {
   NOT?: AnswerWhereInput[] | AnswerWhereInput;
 }
 
-export interface AnswerCreateInput {
-  text: String;
-  question: QuestionCreateOneInput;
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
-}
-
-export interface QuestionCreateOneInput {
-  create?: QuestionCreateInput;
-  connect?: QuestionWhereUniqueInput;
+export interface QuestionCreateManyWithoutTestInput {
+  create?: QuestionCreateWithoutTestInput[] | QuestionCreateWithoutTestInput;
+  connect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
 }
 
 export interface TestWhereInput {
@@ -478,11 +469,33 @@ export interface TestWhereInput {
   NOT?: TestWhereInput[] | TestWhereInput;
 }
 
-export interface QuestionCreateInput {
+export interface AnswerCreateOneInput {
+  create?: AnswerCreateInput;
+  connect?: AnswerWhereUniqueInput;
+}
+
+export interface AnswerUpdateWithoutQuestionDataInput {
+  text?: String;
+}
+
+export interface AnswerUpdateInput {
+  text?: String;
+  question?: QuestionUpdateOneWithoutAnswersInput;
+}
+
+export interface QuestionCreateWithoutTestInput {
   text: String;
-  test: TestCreateOneWithoutQuestionsInput;
-  answers?: AnswerCreateManyInput;
-  correctAnswers?: AnswerCreateManyInput;
+  answers?: AnswerCreateManyWithoutQuestionInput;
+  correctAnswer: AnswerCreateOneInput;
+}
+
+export interface QuestionUpdateOneWithoutAnswersInput {
+  create?: QuestionCreateWithoutAnswersInput;
+  update?: QuestionUpdateWithoutAnswersDataInput;
+  upsert?: QuestionUpsertWithoutAnswersInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: QuestionWhereUniqueInput;
 }
 
 export interface TestSubscriptionWhereInput {
@@ -496,24 +509,28 @@ export interface TestSubscriptionWhereInput {
   NOT?: TestSubscriptionWhereInput[] | TestSubscriptionWhereInput;
 }
 
-export interface TestCreateOneWithoutQuestionsInput {
-  create?: TestCreateWithoutQuestionsInput;
-  connect?: TestWhereUniqueInput;
+export interface QuestionUpdateWithoutAnswersDataInput {
+  text?: String;
+  test?: TestUpdateOneRequiredWithoutQuestionsInput;
+  correctAnswer?: AnswerUpdateOneRequiredInput;
 }
 
-export interface QuestionSubscriptionWhereInput {
+export interface ScoreSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
   updatedFields_contains_every?: String[] | String;
   updatedFields_contains_some?: String[] | String;
-  node?: QuestionWhereInput;
-  AND?: QuestionSubscriptionWhereInput[] | QuestionSubscriptionWhereInput;
-  OR?: QuestionSubscriptionWhereInput[] | QuestionSubscriptionWhereInput;
-  NOT?: QuestionSubscriptionWhereInput[] | QuestionSubscriptionWhereInput;
+  node?: ScoreWhereInput;
+  AND?: ScoreSubscriptionWhereInput[] | ScoreSubscriptionWhereInput;
+  OR?: ScoreSubscriptionWhereInput[] | ScoreSubscriptionWhereInput;
+  NOT?: ScoreSubscriptionWhereInput[] | ScoreSubscriptionWhereInput;
 }
 
-export interface TestCreateWithoutQuestionsInput {
-  name: String;
+export interface TestUpdateOneRequiredWithoutQuestionsInput {
+  create?: TestCreateWithoutQuestionsInput;
+  update?: TestUpdateWithoutQuestionsDataInput;
+  upsert?: TestUpsertWithoutQuestionsInput;
+  connect?: TestWhereUniqueInput;
 }
 
 export interface CompletedTestSubscriptionWhereInput {
@@ -533,18 +550,8 @@ export interface CompletedTestSubscriptionWhereInput {
     | CompletedTestSubscriptionWhereInput;
 }
 
-export interface AnswerCreateManyInput {
-  create?: AnswerCreateInput[] | AnswerCreateInput;
-  connect?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
-}
-
-export interface UserUpdateManyMutationInput {
-  username?: String;
-}
-
-export interface AnswerUpdateInput {
-  text?: String;
-  question?: QuestionUpdateOneRequiredInput;
+export interface TestUpdateWithoutQuestionsDataInput {
+  name?: String;
 }
 
 export interface UserWhereInput {
@@ -581,11 +588,9 @@ export interface UserWhereInput {
   NOT?: UserWhereInput[] | UserWhereInput;
 }
 
-export interface QuestionUpdateOneRequiredInput {
-  create?: QuestionCreateInput;
-  update?: QuestionUpdateDataInput;
-  upsert?: QuestionUpsertNestedInput;
-  connect?: QuestionWhereUniqueInput;
+export interface TestUpsertWithoutQuestionsInput {
+  update: TestUpdateWithoutQuestionsDataInput;
+  create: TestCreateWithoutQuestionsInput;
 }
 
 export interface QuestionWhereInput {
@@ -621,162 +626,60 @@ export interface QuestionWhereInput {
   answers_every?: AnswerWhereInput;
   answers_some?: AnswerWhereInput;
   answers_none?: AnswerWhereInput;
-  correctAnswers_every?: AnswerWhereInput;
-  correctAnswers_some?: AnswerWhereInput;
-  correctAnswers_none?: AnswerWhereInput;
+  correctAnswer?: AnswerWhereInput;
   AND?: QuestionWhereInput[] | QuestionWhereInput;
   OR?: QuestionWhereInput[] | QuestionWhereInput;
   NOT?: QuestionWhereInput[] | QuestionWhereInput;
 }
 
-export interface QuestionUpdateDataInput {
+export interface AnswerUpdateOneRequiredInput {
+  create?: AnswerCreateInput;
+  update?: AnswerUpdateDataInput;
+  upsert?: AnswerUpsertNestedInput;
+  connect?: AnswerWhereUniqueInput;
+}
+
+export interface UserUpdateManyMutationInput {
+  username?: String;
+}
+
+export interface AnswerUpdateDataInput {
   text?: String;
-  test?: TestUpdateOneRequiredWithoutQuestionsInput;
-  answers?: AnswerUpdateManyInput;
-  correctAnswers?: AnswerUpdateManyInput;
-}
-
-export interface TestUpdateManyMutationInput {
-  name?: String;
-}
-
-export interface TestUpdateOneRequiredWithoutQuestionsInput {
-  create?: TestCreateWithoutQuestionsInput;
-  update?: TestUpdateWithoutQuestionsDataInput;
-  upsert?: TestUpsertWithoutQuestionsInput;
-  connect?: TestWhereUniqueInput;
+  question?: QuestionUpdateOneWithoutAnswersInput;
 }
 
 export type QuestionWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface TestUpdateWithoutQuestionsDataInput {
+export interface AnswerUpsertNestedInput {
+  update: AnswerUpdateDataInput;
+  create: AnswerCreateInput;
+}
+
+export interface TestUpdateInput {
   name?: String;
+  questions?: QuestionUpdateManyWithoutTestInput;
 }
 
-export interface QuestionUpdateManyMutationInput {
-  text?: String;
-}
-
-export interface TestUpsertWithoutQuestionsInput {
-  update: TestUpdateWithoutQuestionsDataInput;
-  create: TestCreateWithoutQuestionsInput;
+export interface QuestionUpsertWithoutAnswersInput {
+  update: QuestionUpdateWithoutAnswersDataInput;
+  create: QuestionCreateWithoutAnswersInput;
 }
 
 export type ScoreWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface AnswerUpdateManyInput {
-  create?: AnswerCreateInput[] | AnswerCreateInput;
-  update?:
-    | AnswerUpdateWithWhereUniqueNestedInput[]
-    | AnswerUpdateWithWhereUniqueNestedInput;
-  upsert?:
-    | AnswerUpsertWithWhereUniqueNestedInput[]
-    | AnswerUpsertWithWhereUniqueNestedInput;
-  delete?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
-  connect?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
-  set?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
-  disconnect?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
-  deleteMany?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
-  updateMany?:
-    | AnswerUpdateManyWithWhereNestedInput[]
-    | AnswerUpdateManyWithWhereNestedInput;
-}
-
-export interface QuestionUpsertWithWhereUniqueNestedInput {
-  where: QuestionWhereUniqueInput;
-  update: QuestionUpdateDataInput;
-  create: QuestionCreateInput;
-}
-
-export interface AnswerUpdateWithWhereUniqueNestedInput {
-  where: AnswerWhereUniqueInput;
-  data: AnswerUpdateDataInput;
-}
-
-export interface QuestionUpdateManyInput {
-  create?: QuestionCreateInput[] | QuestionCreateInput;
-  update?:
-    | QuestionUpdateWithWhereUniqueNestedInput[]
-    | QuestionUpdateWithWhereUniqueNestedInput;
-  upsert?:
-    | QuestionUpsertWithWhereUniqueNestedInput[]
-    | QuestionUpsertWithWhereUniqueNestedInput;
-  delete?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
-  connect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
-  set?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
-  disconnect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
-  deleteMany?: QuestionScalarWhereInput[] | QuestionScalarWhereInput;
-  updateMany?:
-    | QuestionUpdateManyWithWhereNestedInput[]
-    | QuestionUpdateManyWithWhereNestedInput;
-}
-
-export interface AnswerUpdateDataInput {
+export interface AnswerUpdateManyMutationInput {
   text?: String;
-  question?: QuestionUpdateOneRequiredInput;
 }
 
-export interface ScoreUpdateDataInput {
-  correctlyAnswered?: QuestionUpdateManyInput;
-  wronglyAnswered?: QuestionUpdateManyInput;
-}
-
-export interface QuestionUpdateWithWhereUniqueWithoutTestInput {
-  where: QuestionWhereUniqueInput;
-  data: QuestionUpdateWithoutTestDataInput;
-}
-
-export interface TestUpsertNestedInput {
-  update: TestUpdateDataInput;
-  create: TestCreateInput;
-}
-
-export interface AnswerScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
+export interface QuestionUpdateInput {
   text?: String;
-  text_not?: String;
-  text_in?: String[] | String;
-  text_not_in?: String[] | String;
-  text_lt?: String;
-  text_lte?: String;
-  text_gt?: String;
-  text_gte?: String;
-  text_contains?: String;
-  text_not_contains?: String;
-  text_starts_with?: String;
-  text_not_starts_with?: String;
-  text_ends_with?: String;
-  text_not_ends_with?: String;
-  AND?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
-  OR?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
-  NOT?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
-}
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  username?: String;
-}>;
-
-export interface AnswerUpdateManyWithWhereNestedInput {
-  where: AnswerScalarWhereInput;
-  data: AnswerUpdateManyDataInput;
+  test?: TestUpdateOneRequiredWithoutQuestionsInput;
+  answers?: AnswerUpdateManyWithoutQuestionInput;
+  correctAnswer?: AnswerUpdateOneRequiredInput;
 }
 
 export interface QuestionScalarWhereInput {
@@ -813,57 +716,149 @@ export interface QuestionScalarWhereInput {
   NOT?: QuestionScalarWhereInput[] | QuestionScalarWhereInput;
 }
 
-export interface AnswerUpdateManyDataInput {
-  text?: String;
-}
-
-export interface QuestionUpdateWithoutTestDataInput {
-  text?: String;
-  answers?: AnswerUpdateManyInput;
-  correctAnswers?: AnswerUpdateManyInput;
-}
-
-export interface QuestionUpsertNestedInput {
+export interface QuestionUpsertWithWhereUniqueNestedInput {
+  where: QuestionWhereUniqueInput;
   update: QuestionUpdateDataInput;
   create: QuestionCreateInput;
 }
 
-export interface UserSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: UserWhereInput;
-  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
-  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
-  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+export interface QuestionUpsertWithWhereUniqueWithoutTestInput {
+  where: QuestionWhereUniqueInput;
+  update: QuestionUpdateWithoutTestDataInput;
+  create: QuestionCreateWithoutTestInput;
 }
 
-export interface QuestionUpdateManyWithoutTestInput {
-  create?: QuestionCreateWithoutTestInput[] | QuestionCreateWithoutTestInput;
+export interface QuestionUpdateDataInput {
+  text?: String;
+  test?: TestUpdateOneRequiredWithoutQuestionsInput;
+  answers?: AnswerUpdateManyWithoutQuestionInput;
+  correctAnswer?: AnswerUpdateOneRequiredInput;
+}
+
+export interface AnswerUpdateManyDataInput {
+  text?: String;
+}
+
+export interface QuestionUpdateManyInput {
+  create?: QuestionCreateInput[] | QuestionCreateInput;
+  update?:
+    | QuestionUpdateWithWhereUniqueNestedInput[]
+    | QuestionUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | QuestionUpsertWithWhereUniqueNestedInput[]
+    | QuestionUpsertWithWhereUniqueNestedInput;
   delete?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
   connect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
   set?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
   disconnect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
-  update?:
-    | QuestionUpdateWithWhereUniqueWithoutTestInput[]
-    | QuestionUpdateWithWhereUniqueWithoutTestInput;
-  upsert?:
-    | QuestionUpsertWithWhereUniqueWithoutTestInput[]
-    | QuestionUpsertWithWhereUniqueWithoutTestInput;
   deleteMany?: QuestionScalarWhereInput[] | QuestionScalarWhereInput;
   updateMany?:
     | QuestionUpdateManyWithWhereNestedInput[]
     | QuestionUpdateManyWithWhereNestedInput;
 }
 
+export interface UserCreateOneInput {
+  create?: UserCreateInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  username?: String;
+}>;
+
+export interface UserCreateInput {
+  username: String;
+}
+
+export interface TestUpsertNestedInput {
+  update: TestUpdateDataInput;
+  create: TestCreateInput;
+}
+
+export interface TestCreateOneInput {
+  create?: TestCreateInput;
+  connect?: TestWhereUniqueInput;
+}
+
+export interface QuestionUpdateManyWithWhereNestedInput {
+  where: QuestionScalarWhereInput;
+  data: QuestionUpdateManyDataInput;
+}
+
+export interface AnswerUpdateManyWithWhereNestedInput {
+  where: AnswerScalarWhereInput;
+  data: AnswerUpdateManyDataInput;
+}
+
+export interface AnswerCreateInput {
+  text: String;
+  question?: QuestionCreateOneWithoutAnswersInput;
+}
+
+export interface AnswerScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  text?: String;
+  text_not?: String;
+  text_in?: String[] | String;
+  text_not_in?: String[] | String;
+  text_lt?: String;
+  text_lte?: String;
+  text_gt?: String;
+  text_gte?: String;
+  text_contains?: String;
+  text_not_contains?: String;
+  text_starts_with?: String;
+  text_not_starts_with?: String;
+  text_ends_with?: String;
+  text_not_ends_with?: String;
+  AND?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
+  OR?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
+  NOT?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
+}
+
+export interface QuestionCreateWithoutAnswersInput {
+  text: String;
+  test: TestCreateOneWithoutQuestionsInput;
+  correctAnswer: AnswerCreateOneInput;
+}
+
+export interface AnswerUpsertWithWhereUniqueWithoutQuestionInput {
+  where: AnswerWhereUniqueInput;
+  update: AnswerUpdateWithoutQuestionDataInput;
+  create: AnswerCreateWithoutQuestionInput;
+}
+
+export interface TestCreateWithoutQuestionsInput {
+  name: String;
+}
+
+export interface AnswerCreateManyWithoutQuestionInput {
+  create?:
+    | AnswerCreateWithoutQuestionInput[]
+    | AnswerCreateWithoutQuestionInput;
+  connect?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
+}
+
 export type CompletedTestWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface TestUpdateDataInput {
-  name?: String;
-  questions?: QuestionUpdateManyWithoutTestInput;
+export interface AnswerCreateWithoutQuestionInput {
+  text: String;
 }
 
 export interface CompletedTestWhereInput {
@@ -889,86 +884,103 @@ export interface CompletedTestWhereInput {
   NOT?: CompletedTestWhereInput[] | CompletedTestWhereInput;
 }
 
-export interface TestUpdateOneRequiredInput {
-  create?: TestCreateInput;
-  update?: TestUpdateDataInput;
-  upsert?: TestUpsertNestedInput;
-  connect?: TestWhereUniqueInput;
+export interface ScoreCreateOneInput {
+  create?: ScoreCreateInput;
+  connect?: ScoreWhereUniqueInput;
 }
 
-export interface UserUpdateInput {
-  username?: String;
+export interface AnswerSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: AnswerWhereInput;
+  AND?: AnswerSubscriptionWhereInput[] | AnswerSubscriptionWhereInput;
+  OR?: AnswerSubscriptionWhereInput[] | AnswerSubscriptionWhereInput;
+  NOT?: AnswerSubscriptionWhereInput[] | AnswerSubscriptionWhereInput;
 }
 
-export interface CompletedTestCreateInput {
-  user: UserCreateOneInput;
-  test: TestCreateOneInput;
-  score: ScoreCreateOneInput;
+export interface ScoreCreateInput {
+  correctlyAnswered?: QuestionCreateManyInput;
+  wronglyAnswered?: QuestionCreateManyInput;
 }
 
-export interface ScoreUpdateInput {
-  correctlyAnswered?: QuestionUpdateManyInput;
-  wronglyAnswered?: QuestionUpdateManyInput;
+export interface TestUpdateManyMutationInput {
+  name?: String;
 }
 
-export interface UserCreateOneInput {
-  create?: UserCreateInput;
-  connect?: UserWhereUniqueInput;
+export interface QuestionCreateManyInput {
+  create?: QuestionCreateInput[] | QuestionCreateInput;
+  connect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
 }
 
-export interface ScoreUpsertNestedInput {
-  update: ScoreUpdateDataInput;
-  create: ScoreCreateInput;
+export interface QuestionUpdateManyMutationInput {
+  text?: String;
 }
 
-export interface UserCreateInput {
-  username: String;
+export interface QuestionCreateInput {
+  text: String;
+  test: TestCreateOneWithoutQuestionsInput;
+  answers?: AnswerCreateManyWithoutQuestionInput;
+  correctAnswer: AnswerCreateOneInput;
 }
 
 export type TestWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface TestCreateOneInput {
-  create?: TestCreateInput;
-  connect?: TestWhereUniqueInput;
+export interface CompletedTestUpdateInput {
+  user?: UserUpdateOneRequiredInput;
+  test?: TestUpdateOneRequiredInput;
+  score?: ScoreUpdateOneRequiredInput;
+}
+
+export interface ScoreUpdateDataInput {
+  correctlyAnswered?: QuestionUpdateManyInput;
+  wronglyAnswered?: QuestionUpdateManyInput;
+}
+
+export interface UserUpdateOneRequiredInput {
+  create?: UserCreateInput;
+  update?: UserUpdateDataInput;
+  upsert?: UserUpsertNestedInput;
+  connect?: UserWhereUniqueInput;
 }
 
 export interface QuestionUpdateManyDataInput {
   text?: String;
 }
 
-export interface TestCreateInput {
-  name: String;
-  questions?: QuestionCreateManyWithoutTestInput;
+export interface UserUpdateDataInput {
+  username?: String;
 }
 
-export interface QuestionUpsertWithWhereUniqueWithoutTestInput {
-  where: QuestionWhereUniqueInput;
-  update: QuestionUpdateWithoutTestDataInput;
-  create: QuestionCreateWithoutTestInput;
+export interface QuestionCreateOneWithoutAnswersInput {
+  create?: QuestionCreateWithoutAnswersInput;
+  connect?: QuestionWhereUniqueInput;
 }
 
-export interface QuestionCreateManyWithoutTestInput {
-  create?: QuestionCreateWithoutTestInput[] | QuestionCreateWithoutTestInput;
-  connect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
 }
 
-export interface ScoreSubscriptionWhereInput {
+export interface UserSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
   updatedFields_contains_every?: String[] | String;
   updatedFields_contains_some?: String[] | String;
-  node?: ScoreWhereInput;
-  AND?: ScoreSubscriptionWhereInput[] | ScoreSubscriptionWhereInput;
-  OR?: ScoreSubscriptionWhereInput[] | ScoreSubscriptionWhereInput;
-  NOT?: ScoreSubscriptionWhereInput[] | ScoreSubscriptionWhereInput;
+  node?: UserWhereInput;
+  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
 }
 
-export interface QuestionCreateWithoutTestInput {
-  text: String;
-  answers?: AnswerCreateManyInput;
-  correctAnswers?: AnswerCreateManyInput;
+export interface TestUpdateOneRequiredInput {
+  create?: TestCreateInput;
+  update?: TestUpdateDataInput;
+  upsert?: TestUpsertNestedInput;
+  connect?: TestWhereUniqueInput;
 }
 
 export interface ScoreWhereInput {
@@ -997,21 +1009,78 @@ export interface ScoreWhereInput {
   NOT?: ScoreWhereInput[] | ScoreWhereInput;
 }
 
-export interface ScoreCreateOneInput {
-  create?: ScoreCreateInput;
-  connect?: ScoreWhereUniqueInput;
+export interface TestUpdateDataInput {
+  name?: String;
+  questions?: QuestionUpdateManyWithoutTestInput;
 }
 
-export interface QuestionUpdateInput {
+export interface ScoreUpdateInput {
+  correctlyAnswered?: QuestionUpdateManyInput;
+  wronglyAnswered?: QuestionUpdateManyInput;
+}
+
+export interface QuestionUpdateManyWithoutTestInput {
+  create?: QuestionCreateWithoutTestInput[] | QuestionCreateWithoutTestInput;
+  delete?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
+  connect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
+  set?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
+  disconnect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
+  update?:
+    | QuestionUpdateWithWhereUniqueWithoutTestInput[]
+    | QuestionUpdateWithWhereUniqueWithoutTestInput;
+  upsert?:
+    | QuestionUpsertWithWhereUniqueWithoutTestInput[]
+    | QuestionUpsertWithWhereUniqueWithoutTestInput;
+  deleteMany?: QuestionScalarWhereInput[] | QuestionScalarWhereInput;
+  updateMany?:
+    | QuestionUpdateManyWithWhereNestedInput[]
+    | QuestionUpdateManyWithWhereNestedInput;
+}
+
+export interface QuestionUpdateWithWhereUniqueNestedInput {
+  where: QuestionWhereUniqueInput;
+  data: QuestionUpdateDataInput;
+}
+
+export interface AnswerUpdateWithWhereUniqueWithoutQuestionInput {
+  where: AnswerWhereUniqueInput;
+  data: AnswerUpdateWithoutQuestionDataInput;
+}
+
+export interface AnswerUpdateManyWithoutQuestionInput {
+  create?:
+    | AnswerCreateWithoutQuestionInput[]
+    | AnswerCreateWithoutQuestionInput;
+  delete?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
+  connect?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
+  set?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
+  disconnect?: AnswerWhereUniqueInput[] | AnswerWhereUniqueInput;
+  update?:
+    | AnswerUpdateWithWhereUniqueWithoutQuestionInput[]
+    | AnswerUpdateWithWhereUniqueWithoutQuestionInput;
+  upsert?:
+    | AnswerUpsertWithWhereUniqueWithoutQuestionInput[]
+    | AnswerUpsertWithWhereUniqueWithoutQuestionInput;
+  deleteMany?: AnswerScalarWhereInput[] | AnswerScalarWhereInput;
+  updateMany?:
+    | AnswerUpdateManyWithWhereNestedInput[]
+    | AnswerUpdateManyWithWhereNestedInput;
+}
+
+export interface QuestionUpdateWithoutTestDataInput {
   text?: String;
-  test?: TestUpdateOneRequiredWithoutQuestionsInput;
-  answers?: AnswerUpdateManyInput;
-  correctAnswers?: AnswerUpdateManyInput;
+  answers?: AnswerUpdateManyWithoutQuestionInput;
+  correctAnswer?: AnswerUpdateOneRequiredInput;
 }
 
-export interface ScoreCreateInput {
-  correctlyAnswered?: QuestionCreateManyInput;
-  wronglyAnswered?: QuestionCreateManyInput;
+export interface QuestionUpdateWithWhereUniqueWithoutTestInput {
+  where: QuestionWhereUniqueInput;
+  data: QuestionUpdateWithoutTestDataInput;
+}
+
+export interface TestCreateOneWithoutQuestionsInput {
+  create?: TestCreateWithoutQuestionsInput;
+  connect?: TestWhereUniqueInput;
 }
 
 export interface ScoreUpdateOneRequiredInput {
@@ -1021,93 +1090,28 @@ export interface ScoreUpdateOneRequiredInput {
   connect?: ScoreWhereUniqueInput;
 }
 
-export interface UserUpdateDataInput {
+export interface ScoreUpsertNestedInput {
+  update: ScoreUpdateDataInput;
+  create: ScoreCreateInput;
+}
+
+export interface UserUpdateInput {
   username?: String;
 }
 
-export interface UserUpdateOneRequiredInput {
-  create?: UserCreateInput;
-  update?: UserUpdateDataInput;
-  upsert?: UserUpsertNestedInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface CompletedTestUpdateInput {
-  user?: UserUpdateOneRequiredInput;
-  test?: TestUpdateOneRequiredInput;
-  score?: ScoreUpdateOneRequiredInput;
-}
-
-export interface QuestionCreateManyInput {
-  create?: QuestionCreateInput[] | QuestionCreateInput;
-  connect?: QuestionWhereUniqueInput[] | QuestionWhereUniqueInput;
-}
-
-export interface AnswerSubscriptionWhereInput {
+export interface QuestionSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
   updatedFields_contains_every?: String[] | String;
   updatedFields_contains_some?: String[] | String;
-  node?: AnswerWhereInput;
-  AND?: AnswerSubscriptionWhereInput[] | AnswerSubscriptionWhereInput;
-  OR?: AnswerSubscriptionWhereInput[] | AnswerSubscriptionWhereInput;
-  NOT?: AnswerSubscriptionWhereInput[] | AnswerSubscriptionWhereInput;
-}
-
-export interface QuestionUpdateManyWithWhereNestedInput {
-  where: QuestionScalarWhereInput;
-  data: QuestionUpdateManyDataInput;
-}
-
-export interface QuestionUpdateWithWhereUniqueNestedInput {
-  where: QuestionWhereUniqueInput;
-  data: QuestionUpdateDataInput;
-}
-
-export interface TestUpdateInput {
-  name?: String;
-  questions?: QuestionUpdateManyWithoutTestInput;
+  node?: QuestionWhereInput;
+  AND?: QuestionSubscriptionWhereInput[] | QuestionSubscriptionWhereInput;
+  OR?: QuestionSubscriptionWhereInput[] | QuestionSubscriptionWhereInput;
+  NOT?: QuestionSubscriptionWhereInput[] | QuestionSubscriptionWhereInput;
 }
 
 export interface NodeNode {
   id: ID_Output;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface CompletedTestConnection {
-  pageInfo: PageInfo;
-  edges: CompletedTestEdge[];
-}
-
-export interface CompletedTestConnectionPromise
-  extends Promise<CompletedTestConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<CompletedTestEdge>>() => T;
-  aggregate: <T = AggregateCompletedTestPromise>() => T;
-}
-
-export interface CompletedTestConnectionSubscription
-  extends Promise<AsyncIterator<CompletedTestConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CompletedTestEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCompletedTestSubscription>() => T;
 }
 
 export interface UserPreviousValues {
@@ -1129,23 +1133,64 @@ export interface UserPreviousValuesSubscription
   username: () => Promise<AsyncIterator<String>>;
 }
 
-export interface CompletedTestEdge {
-  node: CompletedTest;
-  cursor: String;
+export interface AggregateCompletedTest {
+  count: Int;
 }
 
-export interface CompletedTestEdgePromise
-  extends Promise<CompletedTestEdge>,
+export interface AggregateCompletedTestPromise
+  extends Promise<AggregateCompletedTest>,
     Fragmentable {
-  node: <T = CompletedTestPromise>() => T;
-  cursor: () => Promise<String>;
+  count: () => Promise<Int>;
 }
 
-export interface CompletedTestEdgeSubscription
-  extends Promise<AsyncIterator<CompletedTestEdge>>,
+export interface AggregateCompletedTestSubscription
+  extends Promise<AsyncIterator<AggregateCompletedTest>>,
     Fragmentable {
-  node: <T = CompletedTestSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface QuestionConnection {
+  pageInfo: PageInfo;
+  edges: QuestionEdge[];
+}
+
+export interface QuestionConnectionPromise
+  extends Promise<QuestionConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<QuestionEdge>>() => T;
+  aggregate: <T = AggregateQuestionPromise>() => T;
+}
+
+export interface QuestionConnectionSubscription
+  extends Promise<AsyncIterator<QuestionConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<QuestionEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateQuestionSubscription>() => T;
 }
 
 export interface TestSubscriptionPayload {
@@ -1192,6 +1237,238 @@ export interface AnswerConnectionSubscription
   pageInfo: <T = PageInfoSubscription>() => T;
   edges: <T = Promise<AsyncIterator<AnswerEdgeSubscription>>>() => T;
   aggregate: <T = AggregateAnswerSubscription>() => T;
+}
+
+export interface CompletedTestEdge {
+  node: CompletedTest;
+  cursor: String;
+}
+
+export interface CompletedTestEdgePromise
+  extends Promise<CompletedTestEdge>,
+    Fragmentable {
+  node: <T = CompletedTestPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CompletedTestEdgeSubscription
+  extends Promise<AsyncIterator<CompletedTestEdge>>,
+    Fragmentable {
+  node: <T = CompletedTestSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface TestPreviousValues {
+  id: ID_Output;
+  name: String;
+}
+
+export interface TestPreviousValuesPromise
+  extends Promise<TestPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+}
+
+export interface TestPreviousValuesSubscription
+  extends Promise<AsyncIterator<TestPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface CompletedTestConnection {
+  pageInfo: PageInfo;
+  edges: CompletedTestEdge[];
+}
+
+export interface CompletedTestConnectionPromise
+  extends Promise<CompletedTestConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<CompletedTestEdge>>() => T;
+  aggregate: <T = AggregateCompletedTestPromise>() => T;
+}
+
+export interface CompletedTestConnectionSubscription
+  extends Promise<AsyncIterator<CompletedTestConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CompletedTestEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCompletedTestSubscription>() => T;
+}
+
+export interface UserEdge {
+  node: User;
+  cursor: String;
+}
+
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Answer {
+  id: ID_Output;
+  text: String;
+}
+
+export interface AnswerPromise extends Promise<Answer>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  text: () => Promise<String>;
+  question: <T = QuestionPromise>() => T;
+}
+
+export interface AnswerSubscription
+  extends Promise<AsyncIterator<Answer>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  text: () => Promise<AsyncIterator<String>>;
+  question: <T = QuestionSubscription>() => T;
+}
+
+export interface AnswerEdge {
+  node: Answer;
+  cursor: String;
+}
+
+export interface AnswerEdgePromise extends Promise<AnswerEdge>, Fragmentable {
+  node: <T = AnswerPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface AnswerEdgeSubscription
+  extends Promise<AsyncIterator<AnswerEdge>>,
+    Fragmentable {
+  node: <T = AnswerSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AnswerSubscriptionPayload {
+  mutation: MutationType;
+  node: Answer;
+  updatedFields: String[];
+  previousValues: AnswerPreviousValues;
+}
+
+export interface AnswerSubscriptionPayloadPromise
+  extends Promise<AnswerSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = AnswerPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = AnswerPreviousValuesPromise>() => T;
+}
+
+export interface AnswerSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<AnswerSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = AnswerSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = AnswerPreviousValuesSubscription>() => T;
+}
+
+export interface TestEdge {
+  node: Test;
+  cursor: String;
+}
+
+export interface TestEdgePromise extends Promise<TestEdge>, Fragmentable {
+  node: <T = TestPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface TestEdgeSubscription
+  extends Promise<AsyncIterator<TestEdge>>,
+    Fragmentable {
+  node: <T = TestSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AnswerPreviousValues {
+  id: ID_Output;
+  text: String;
+}
+
+export interface AnswerPreviousValuesPromise
+  extends Promise<AnswerPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  text: () => Promise<String>;
+}
+
+export interface AnswerPreviousValuesSubscription
+  extends Promise<AsyncIterator<AnswerPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  text: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Question {
+  id: ID_Output;
+  text: String;
+}
+
+export interface QuestionPromise extends Promise<Question>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  text: () => Promise<String>;
+  test: <T = TestPromise>() => T;
+  answers: <T = FragmentableArray<Answer>>(
+    args?: {
+      where?: AnswerWhereInput;
+      orderBy?: AnswerOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  correctAnswer: <T = AnswerPromise>() => T;
+}
+
+export interface QuestionSubscription
+  extends Promise<AsyncIterator<Question>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  text: () => Promise<AsyncIterator<String>>;
+  test: <T = TestSubscription>() => T;
+  answers: <T = Promise<AsyncIterator<AnswerSubscription>>>(
+    args?: {
+      where?: AnswerWhereInput;
+      orderBy?: AnswerOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  correctAnswer: <T = AnswerSubscription>() => T;
 }
 
 export interface Score {
@@ -1252,231 +1529,6 @@ export interface ScoreSubscription
   ) => T;
 }
 
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface User {
-  id: ID_Output;
-  username: String;
-}
-
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  username: () => Promise<AsyncIterator<String>>;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
-}
-
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
-
-export interface Answer {
-  id: ID_Output;
-  text: String;
-}
-
-export interface AnswerPromise extends Promise<Answer>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  text: () => Promise<String>;
-  question: <T = QuestionPromise>() => T;
-}
-
-export interface AnswerSubscription
-  extends Promise<AsyncIterator<Answer>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  text: () => Promise<AsyncIterator<String>>;
-  question: <T = QuestionSubscription>() => T;
-}
-
-export interface TestEdge {
-  node: Test;
-  cursor: String;
-}
-
-export interface TestEdgePromise extends Promise<TestEdge>, Fragmentable {
-  node: <T = TestPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface TestEdgeSubscription
-  extends Promise<AsyncIterator<TestEdge>>,
-    Fragmentable {
-  node: <T = TestSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AnswerSubscriptionPayload {
-  mutation: MutationType;
-  node: Answer;
-  updatedFields: String[];
-  previousValues: AnswerPreviousValues;
-}
-
-export interface AnswerSubscriptionPayloadPromise
-  extends Promise<AnswerSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = AnswerPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = AnswerPreviousValuesPromise>() => T;
-}
-
-export interface AnswerSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<AnswerSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = AnswerSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = AnswerPreviousValuesSubscription>() => T;
-}
-
-export interface Question {
-  id: ID_Output;
-  text: String;
-}
-
-export interface QuestionPromise extends Promise<Question>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  text: () => Promise<String>;
-  test: <T = TestPromise>() => T;
-  answers: <T = FragmentableArray<Answer>>(
-    args?: {
-      where?: AnswerWhereInput;
-      orderBy?: AnswerOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  correctAnswers: <T = FragmentableArray<Answer>>(
-    args?: {
-      where?: AnswerWhereInput;
-      orderBy?: AnswerOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface QuestionSubscription
-  extends Promise<AsyncIterator<Question>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  text: () => Promise<AsyncIterator<String>>;
-  test: <T = TestSubscription>() => T;
-  answers: <T = Promise<AsyncIterator<AnswerSubscription>>>(
-    args?: {
-      where?: AnswerWhereInput;
-      orderBy?: AnswerOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  correctAnswers: <T = Promise<AsyncIterator<AnswerSubscription>>>(
-    args?: {
-      where?: AnswerWhereInput;
-      orderBy?: AnswerOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface AnswerPreviousValues {
-  id: ID_Output;
-  text: String;
-}
-
-export interface AnswerPreviousValuesPromise
-  extends Promise<AnswerPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  text: () => Promise<String>;
-}
-
-export interface AnswerPreviousValuesSubscription
-  extends Promise<AsyncIterator<AnswerPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  text: () => Promise<AsyncIterator<String>>;
-}
-
 export interface ScoreEdge {
   node: Score;
   cursor: String;
@@ -1494,26 +1546,29 @@ export interface ScoreEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface CompletedTest {
-  id: ID_Output;
+export interface CompletedTestSubscriptionPayload {
+  mutation: MutationType;
+  node: CompletedTest;
+  updatedFields: String[];
+  previousValues: CompletedTestPreviousValues;
 }
 
-export interface CompletedTestPromise
-  extends Promise<CompletedTest>,
+export interface CompletedTestSubscriptionPayloadPromise
+  extends Promise<CompletedTestSubscriptionPayload>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  test: <T = TestPromise>() => T;
-  score: <T = ScorePromise>() => T;
+  mutation: () => Promise<MutationType>;
+  node: <T = CompletedTestPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CompletedTestPreviousValuesPromise>() => T;
 }
 
-export interface CompletedTestSubscription
-  extends Promise<AsyncIterator<CompletedTest>>,
+export interface CompletedTestSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CompletedTestSubscriptionPayload>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  user: <T = UserSubscription>() => T;
-  test: <T = TestSubscription>() => T;
-  score: <T = ScoreSubscription>() => T;
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CompletedTestSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CompletedTestPreviousValuesSubscription>() => T;
 }
 
 export interface Test {
@@ -1555,29 +1610,20 @@ export interface TestSubscription
   ) => T;
 }
 
-export interface CompletedTestSubscriptionPayload {
-  mutation: MutationType;
-  node: CompletedTest;
-  updatedFields: String[];
-  previousValues: CompletedTestPreviousValues;
+export interface CompletedTestPreviousValues {
+  id: ID_Output;
 }
 
-export interface CompletedTestSubscriptionPayloadPromise
-  extends Promise<CompletedTestSubscriptionPayload>,
+export interface CompletedTestPreviousValuesPromise
+  extends Promise<CompletedTestPreviousValues>,
     Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = CompletedTestPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = CompletedTestPreviousValuesPromise>() => T;
+  id: () => Promise<ID_Output>;
 }
 
-export interface CompletedTestSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<CompletedTestSubscriptionPayload>>,
+export interface CompletedTestPreviousValuesSubscription
+  extends Promise<AsyncIterator<CompletedTestPreviousValues>>,
     Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = CompletedTestSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = CompletedTestPreviousValuesSubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
 }
 
 export interface QuestionEdge {
@@ -1599,73 +1645,37 @@ export interface QuestionEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface CompletedTestPreviousValues {
+export interface User {
   id: ID_Output;
+  username: String;
 }
 
-export interface CompletedTestPreviousValuesPromise
-  extends Promise<CompletedTestPreviousValues>,
-    Fragmentable {
+export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
+  username: () => Promise<String>;
 }
 
-export interface CompletedTestPreviousValuesSubscription
-  extends Promise<AsyncIterator<CompletedTestPreviousValues>>,
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  username: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregateCompletedTest {
+export interface AggregateUser {
   count: Int;
 }
 
-export interface AggregateCompletedTestPromise
-  extends Promise<AggregateCompletedTest>,
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateCompletedTestSubscription
-  extends Promise<AsyncIterator<AggregateCompletedTest>>,
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface AggregateAnswer {
-  count: Int;
-}
-
-export interface AggregateAnswerPromise
-  extends Promise<AggregateAnswer>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateAnswerSubscription
-  extends Promise<AsyncIterator<AggregateAnswer>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
-}
-
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
-}
-
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface QuestionSubscriptionPayload {
@@ -1693,25 +1703,20 @@ export interface QuestionSubscriptionPayloadSubscription
   previousValues: <T = QuestionPreviousValuesSubscription>() => T;
 }
 
-export interface TestConnection {
-  pageInfo: PageInfo;
-  edges: TestEdge[];
+export interface AggregateTest {
+  count: Int;
 }
 
-export interface TestConnectionPromise
-  extends Promise<TestConnection>,
+export interface AggregateTestPromise
+  extends Promise<AggregateTest>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<TestEdge>>() => T;
-  aggregate: <T = AggregateTestPromise>() => T;
+  count: () => Promise<Int>;
 }
 
-export interface TestConnectionSubscription
-  extends Promise<AsyncIterator<TestConnection>>,
+export interface AggregateTestSubscription
+  extends Promise<AsyncIterator<AggregateTest>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<TestEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateTestSubscription>() => T;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface QuestionPreviousValues {
@@ -1733,65 +1738,52 @@ export interface QuestionPreviousValuesSubscription
   text: () => Promise<AsyncIterator<String>>;
 }
 
-export interface ScoreConnection {
-  pageInfo: PageInfo;
-  edges: ScoreEdge[];
+export interface AggregateScore {
+  count: Int;
 }
 
-export interface ScoreConnectionPromise
-  extends Promise<ScoreConnection>,
+export interface AggregateScorePromise
+  extends Promise<AggregateScore>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ScoreEdge>>() => T;
-  aggregate: <T = AggregateScorePromise>() => T;
+  count: () => Promise<Int>;
 }
 
-export interface ScoreConnectionSubscription
-  extends Promise<AsyncIterator<ScoreConnection>>,
+export interface AggregateScoreSubscription
+  extends Promise<AsyncIterator<AggregateScore>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ScoreEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateScoreSubscription>() => T;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface QuestionConnection {
-  pageInfo: PageInfo;
-  edges: QuestionEdge[];
+export interface AggregateQuestion {
+  count: Int;
 }
 
-export interface QuestionConnectionPromise
-  extends Promise<QuestionConnection>,
+export interface AggregateQuestionPromise
+  extends Promise<AggregateQuestion>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<QuestionEdge>>() => T;
-  aggregate: <T = AggregateQuestionPromise>() => T;
+  count: () => Promise<Int>;
 }
 
-export interface QuestionConnectionSubscription
-  extends Promise<AsyncIterator<QuestionConnection>>,
+export interface AggregateQuestionSubscription
+  extends Promise<AsyncIterator<AggregateQuestion>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<QuestionEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateQuestionSubscription>() => T;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface TestPreviousValues {
-  id: ID_Output;
-  name: String;
+export interface AggregateAnswer {
+  count: Int;
 }
 
-export interface TestPreviousValuesPromise
-  extends Promise<TestPreviousValues>,
+export interface AggregateAnswerPromise
+  extends Promise<AggregateAnswer>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
+  count: () => Promise<Int>;
 }
 
-export interface TestPreviousValuesSubscription
-  extends Promise<AsyncIterator<TestPreviousValues>>,
+export interface AggregateAnswerSubscription
+  extends Promise<AsyncIterator<AggregateAnswer>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface ScorePreviousValues {
@@ -1835,93 +1827,127 @@ export interface ScoreSubscriptionPayloadSubscription
   previousValues: <T = ScorePreviousValuesSubscription>() => T;
 }
 
-export interface AnswerEdge {
-  node: Answer;
-  cursor: String;
+export interface CompletedTest {
+  id: ID_Output;
 }
 
-export interface AnswerEdgePromise extends Promise<AnswerEdge>, Fragmentable {
-  node: <T = AnswerPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface AnswerEdgeSubscription
-  extends Promise<AsyncIterator<AnswerEdge>>,
+export interface CompletedTestPromise
+  extends Promise<CompletedTest>,
     Fragmentable {
-  node: <T = AnswerSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  id: () => Promise<ID_Output>;
+  user: <T = UserPromise>() => T;
+  test: <T = TestPromise>() => T;
+  score: <T = ScorePromise>() => T;
 }
 
-export interface AggregateUser {
-  count: Int;
-}
-
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
+export interface CompletedTestSubscription
+  extends Promise<AsyncIterator<CompletedTest>>,
     Fragmentable {
-  count: () => Promise<Int>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  user: <T = UserSubscription>() => T;
+  test: <T = TestSubscription>() => T;
+  score: <T = ScoreSubscription>() => T;
 }
 
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
 }
 
-export interface AggregateQuestion {
-  count: Int;
-}
-
-export interface AggregateQuestionPromise
-  extends Promise<AggregateQuestion>,
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
     Fragmentable {
-  count: () => Promise<Int>;
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
 }
 
-export interface AggregateQuestionSubscription
-  extends Promise<AsyncIterator<AggregateQuestion>>,
+export interface ScoreConnection {
+  pageInfo: PageInfo;
+  edges: ScoreEdge[];
+}
+
+export interface ScoreConnectionPromise
+  extends Promise<ScoreConnection>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ScoreEdge>>() => T;
+  aggregate: <T = AggregateScorePromise>() => T;
 }
 
-export interface AggregateScore {
-  count: Int;
-}
-
-export interface AggregateScorePromise
-  extends Promise<AggregateScore>,
+export interface ScoreConnectionSubscription
+  extends Promise<AsyncIterator<ScoreConnection>>,
     Fragmentable {
-  count: () => Promise<Int>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ScoreEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateScoreSubscription>() => T;
 }
 
-export interface AggregateScoreSubscription
-  extends Promise<AsyncIterator<AggregateScore>>,
+export interface TestConnection {
+  pageInfo: PageInfo;
+  edges: TestEdge[];
+}
+
+export interface TestConnectionPromise
+  extends Promise<TestConnection>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<TestEdge>>() => T;
+  aggregate: <T = AggregateTestPromise>() => T;
 }
 
-export interface AggregateTest {
-  count: Int;
-}
-
-export interface AggregateTestPromise
-  extends Promise<AggregateTest>,
+export interface TestConnectionSubscription
+  extends Promise<AsyncIterator<TestConnection>>,
     Fragmentable {
-  count: () => Promise<Int>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<TestEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateTestSubscription>() => T;
 }
 
-export interface AggregateTestSubscription
-  extends Promise<AsyncIterator<AggregateTest>>,
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
 }
 
-export type Long = string;
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
+}
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
+
+export type Long = string;
 
 /*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
@@ -1933,11 +1959,6 @@ The `ID` scalar type represents a unique identifier, often used to refetch an ob
 */
 export type ID_Input = string | number;
 export type ID_Output = string;
-
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
 
 /**
  * Model Metadata

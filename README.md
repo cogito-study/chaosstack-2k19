@@ -28,7 +28,7 @@ If something is not clear or if you have any questions feel free to contact us a
 
 #### Deploy backend
 
-1 points
+1 point
 
 #### Query questions from backend
 
@@ -48,7 +48,7 @@ If something is not clear or if you have any questions feel free to contact us a
 
 #### Version control, clean code
 
-1 points
+1 point
 
 ### Submission
 

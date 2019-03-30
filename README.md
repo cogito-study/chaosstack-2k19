@@ -28,27 +28,27 @@ If something is not clear or if you have any questions feel free to contact us a
 
 #### Deploy backend
 
-1 point
+1 points
 
 #### Query questions from backend
 
-2 point
+2 points
 
 #### Create test suite with answer and test submitting
 
-2 point
+2 points
 
 #### Display highscores
 
-2 point
+2 points
 
 #### UI design
 
-2 point
+2 points
 
 #### Version control, clean code
 
-1 point
+1 points
 
 ### Submission
 
